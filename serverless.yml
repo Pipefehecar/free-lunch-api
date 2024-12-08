@@ -1,0 +1,10 @@
+service: free-launch-api-monorepo
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-monorepo
+
+workspaces:
+  - kitchen
+  - warehouse

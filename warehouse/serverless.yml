@@ -1,0 +1,27 @@
+service: warehouse-service
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  profile: free-launch
+  stage: dev
+  environment:
+    DYNAMODB_TABLE_INVENTORY: InventoryTable
+    DYNAMODB_TABLE_PURCHASES: PurchasesTable
+    SQS_RESPONSE_QUEUE: ${env:SQS_RESPONSE_QUEUE} # where warehouse sends the ingredients
+    SQS_REQUEST_QUEUE: ${env:SQS_REQUEST_QUEUE} # where kitchen asks for ingredients / warehouse receives the order ingredients
+
+functions:
+
+  sqsListener:
+    handler: dist/lambda.sqsHandler
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:123456789012:${env:SQS_REQUEST_QUEUE}
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-monorepo

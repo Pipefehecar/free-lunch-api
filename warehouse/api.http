@@ -1,0 +1,10 @@
+@BASE_URL=http://localhost:3000
+
+### Get Inventory
+GET {{BASE_URL}}/inventory HTTP/1.1
+Content-Type: application/json
+
+### Get Purchases
+GET {{BASE_URL}}/purchases HTTP/1.1
+Content-Type: application/json
+
