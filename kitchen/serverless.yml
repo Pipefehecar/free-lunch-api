@@ -7,7 +7,7 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   profile: free-launch
-  stage: dev
+  stage: ${env:STAGE}
   environment:
     PG_HOST: ${env:PG_HOST}
     PG_USER: ${env:PG_USER}

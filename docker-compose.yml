@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  kitchen:
+    build:
+      context: ./kitchen
+      dockerfile: Dockerfile
+    image: kitchen-service:latest
+    container_name: kitchen_service
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./kitchen/.env
+    command: ["node", "dist/main.js"]
+
+  warehouse:
+    build:
+      context: ./warehouse
+      dockerfile: Dockerfile
+    image: warehouse-service:latest
+    container_name: warehouse_service
+    ports:
+      - "3002:3000"
+    env_file:
+      - ./warehouse/.env
+    command: ["node", "dist/main.js"]

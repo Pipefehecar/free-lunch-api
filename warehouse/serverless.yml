@@ -7,10 +7,10 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   profile: free-launch
-  stage: dev
+  stage: ${env:STAGE}
   environment:
-    DYNAMODB_TABLE_INVENTORY: InventoryTable
-    DYNAMODB_TABLE_PURCHASES: PurchasesTable
+    DYNAMODB_TABLE_INVENTORY: ${env:DYNAMODB_TABLE_INVENTORY}
+    DYNAMODB_TABLE_PURCHASES: ${env:DYNAMODB_TABLE_PURCHASES}
     SQS_RESPONSE_QUEUE: ${env:SQS_RESPONSE_QUEUE} # where warehouse sends the ingredients
     SQS_REQUEST_QUEUE: ${env:SQS_REQUEST_QUEUE} # where kitchen asks for ingredients / warehouse receives the order ingredients
 
