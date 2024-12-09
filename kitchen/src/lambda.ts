@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import serverlessExpress from "@vendia/serverless-express";
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
@@ -7,8 +8,8 @@ import {
   SQSEvent,
 } from "aws-lambda";
 import { Callback } from "aws-lambda/handler";
-import { AppModule } from "./app.module";
-import serverlessExpress from "@vendia/serverless-express";
+import "reflect-metadata";
+import { AppModule } from "./app";
 
 let lambdaProxy: Handler;
 

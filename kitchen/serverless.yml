@@ -7,18 +7,30 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   profile: free-launch
-  stage: ${env:STAGE}
+  stage: dev
   environment:
     PG_HOST: ${env:PG_HOST}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
     PG_DATABASE: ${env:PG_DATABASE}
-    SQS_REQUEST_QUEUE: ${env:SQS_REQUEST_QUEUE} # where kitchen ask for ingredients
-    SQS_RESPONSE_QUEUE: ${env:SQS_RESPONSE_QUEUE} # where kitchen receives the ingredients
+    SQS_REQUEST_QUEUE: ${cf:warehouse-service-${self:provider.stage}.RequestQueueUrl}
+    SQS_RESPONSE_QUEUE: ${cf:warehouse-service-${self:provider.stage}.ResponseQueueUrl}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+          Resource:
+            - ${cf:warehouse-service-${self:provider.stage}.RequestQueueArn}
+            - ${cf:warehouse-service-${self:provider.stage}.ResponseQueueArn}
 
 functions:
   api:
-    handler: dist/lambda.handler
+    handler: src/lambda.handler
     events:
       - httpApi:
           path: /orders
@@ -28,11 +40,12 @@ functions:
           method: get
 
   sqsListener:
-    handler: dist/lambda.sqsHandler
+    handler: src/lambda.sqsHandler
     events:
       - sqs:
-          arn: arn:aws:sqs:us-east-1:123456789012:${env:SQS_REQUEST_QUEUE}
+          arn: ${cf:warehouse-service-${self:provider.stage}.ResponseQueueArn}
+          batchSize: 1
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-plugin-monorepo
+  - serverless-dotenv-plugin
