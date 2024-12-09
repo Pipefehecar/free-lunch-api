@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { Sequelize } from 'sequelize-typescript';
 import { Order } from '../models/order';
 import { Recipe } from '../models/recipe';
 import { RecipeIngredient } from '../models/recipe-ingredient';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Ingredient } from 'src/models/ingredient';
+import { Ingredient } from '../models/ingredient';
+import { KitchenRequest } from '../models/kitchen-request';
 
 @Module({
   imports: [
@@ -19,16 +19,16 @@ import { Ingredient } from 'src/models/ingredient';
         username: configService.get('postgres.username'),
         password: configService.get('postgres.password'),
         database: configService.get('postgres.database'),
-        models: [Recipe, RecipeIngredient, Order, Ingredient],
+        models: [Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order],
         autoLoadModels: true,
         synchronize: true,
         sync: {
-          alter: true, 
+          alter: true,
         },
         logging: false,
       }),
     }),
-    SequelizeModule.forFeature([Recipe, RecipeIngredient, Order, Ingredient]), // Agregar esto aquí también
+    SequelizeModule.forFeature([Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order]), // Agregar esto aquí también
   ],
   exports: [SequelizeModule], // Importante: exportar SequelizeModule
 })

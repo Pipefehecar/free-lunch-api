@@ -12,31 +12,23 @@ export class OrdersService {
     private sqsService: AwsSqsService
   ) {}
 
-  async createOrder() {
-    const recipeId = await this.recipeRepository.findRandomRecipeId();
-    const { id: orderId } = await this.orderRepository.create(recipeId);
 
-    console.log("Order created with id:", orderId);
-
-    await this.sqsService.sendMessage({
-      orderId: orderId,
-      action: "REQUEST_INGREDIENTS",
-    });
-
-    return { orderId: orderId, status: "CREATED" };
-  }
-
-  async createMassiveOrders(count: number) {
-    // 1. select random recipeId from recipes table
+  async createOrders(count: number, requestId: number) {
+    const orders = [];
     for (let i = 0; i < count; i++) {
       const recipeId = await this.recipeRepository.findRandomRecipeId();
-      const { id: orderId } = await this.orderRepository.create(recipeId);
-      console.log("Order created with id:", orderId);
-      await this.sqsService.sendMessage({
-        orderId: orderId,
-        action: "REQUEST_INGREDIENTS",
-      });
+      const { id: orderId } = await this.orderRepository.create(
+        recipeId,
+        requestId
+      );
+      orders.push(orderId);
+      // await this.sqsService.sendMessage({
+      //   orderId: orderId,
+      //   action: "REQUEST_INGREDIENTS",
+      // });
     }
+    console.log("Orders created with ids:", orders);
+    return { orders_created: orders.length, status: "CREATED" };
   }
 
   async getAllOrders() {

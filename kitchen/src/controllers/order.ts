@@ -1,24 +1,22 @@
 import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { OrderStatusEnum } from "../models/enums/order";
 import { OrdersService } from "../services/order";
+import { RequestService } from "src/services/request";
 
 @Controller()
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly requestService: RequestService
+  ) {}
 
   @Post("orders")
-  async createOrder() {
-    return await this.ordersService.createOrder();
-  }
-
-  @Post("orders/massive")
-  async createMassiveOrders(@Body("count") count: number) {
-    return await this.ordersService.createMassiveOrders(count);
-  }
-
-  @Get("orders")
-  async getOrders() {
-    return await this.ordersService.getAllOrders();
+  async createMassiveOrders(
+    @Body("quantity") quantity: number,
+    @Body("notes") notes: string
+  ) {
+    const request = await this.requestService.create(notes);
+    return await this.ordersService.createOrders(quantity, request.id);
   }
 
   @Get("orders/:id")

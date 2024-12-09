@@ -1,15 +1,26 @@
 @BASE_URL=http://localhost:3000/api/v1
 # @BASE_URL=https://sp44gvouxc.execute-api.us-east-1.amazonaws.com
 
-### Create Order
+### Create Orders
 POST {{BASE_URL}}/orders HTTP/1.1
 Content-Type: application/json
 
-### Get Orders
-GET {{BASE_URL}}/orders HTTP/1.1
+{
+    "quantity": "2",
+    "notes": "Para los niños pobres"
+}
+
+### Get Requests
+GET {{BASE_URL}}/requests HTTP/1.1
+Content-Type: application/json
+
+### Get order by status
+@status=IN_PROGRESS
+# @status=READY
+@status=CREATED
+GET {{BASE_URL}}/orders?status={{status}} HTTP/1.1
 Content-Type: application/json
 
 ### Get Recipes
 GET {{BASE_URL}}/recipes HTTP/1.1
 Content-Type: application/json
-

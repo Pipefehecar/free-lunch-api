@@ -2,14 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { OrderStatusEnum } from "../models/enums/order";
 import { Order } from "../models/order";
 import { Recipe } from "../models/recipe";
-import { RecipeIngredient } from "../models/recipe-ingredient";
 
 @Injectable()
 export class OrderRepository {
-  async create(recipeId: number): Promise<Order> {
+  async create(recipeId: number, requestId: number): Promise<Order> {
     return await Order.create({
       recipeId,
-      status: OrderStatusEnum.PENDING,
+      requestId,
     });
   }
 
@@ -17,7 +16,6 @@ export class OrderRepository {
     return await Order.bulkCreate(
       recipeIds.map((recipeId) => ({
         recipeId,
-        status: OrderStatusEnum.PENDING,
       }))
     );
   }
@@ -27,7 +25,6 @@ export class OrderRepository {
       include: [
         {
           model: Recipe,
-          include: [RecipeIngredient],
         },
       ],
     });
@@ -38,7 +35,6 @@ export class OrderRepository {
       include: [
         {
           model: Recipe,
-          include: [RecipeIngredient],
         },
       ],
     });

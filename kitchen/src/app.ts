@@ -10,6 +10,9 @@ import { OrdersService } from "./services/order";
 import { ConfigModule } from "@nestjs/config";
 import { RecipesService } from "./services/recipes";
 import { RecipesController } from "./controllers/recipes";
+import { RequestController } from "./controllers/request";
+import { RequestService } from "./services/request";
+import { RequestRepository } from "./repositories/request";
 
 @Module({
   imports: [
@@ -19,12 +22,14 @@ import { RecipesController } from "./controllers/recipes";
       isGlobal: true,
     }),
   ],
-  controllers: [OrdersController, RecipesController],
+  controllers: [OrdersController, RecipesController, RequestController],
   providers: [
     OrdersService,
     RecipesService,
+    RequestService,
     OrderRepository,
     RecipeRepository,
+    RequestRepository,
     RecipeIngredientRepository,
     AwsSqsService,
   ],

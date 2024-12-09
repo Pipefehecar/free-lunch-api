@@ -6,8 +6,9 @@ import {
   Model,
   Table,
 } from "sequelize-typescript";
-import { Recipe } from "./recipe";
 import { OrderStatusEnum } from "./enums/order";
+import { KitchenRequest } from "./kitchen-request";
+import { Recipe } from "./recipe";
 
 @Table({ tableName: "orders" })
 export class Order extends Model {
@@ -25,20 +26,23 @@ export class Order extends Model {
   })
   recipeId: number;
 
+  @ForeignKey(() => KitchenRequest)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    references: {
+      model: KitchenRequest,
+      key: "id",
+    },
+  })
+  requestId: number;
+
   @Column({
     type: DataType.ENUM(...Object.values(OrderStatusEnum)),
     allowNull: false,
-    defaultValue: OrderStatusEnum.PENDING,
+    defaultValue: OrderStatusEnum.CREATED,
   })
   status: OrderStatusEnum;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-    field: "created_at",
-  })
-  createdAt: Date;
 
   @Column({
     type: DataType.DATE,
@@ -47,9 +51,9 @@ export class Order extends Model {
   })
   finishedAt: Date;
 
-
   @BelongsTo(() => Recipe)
   recipe: Recipe;
+
+  @BelongsTo(() => KitchenRequest)
+  request: KitchenRequest;
 }
-
-
