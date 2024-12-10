@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { AwsSqsService } from "./aws-sqs";
 import { OrderStatusEnum } from "../models/enums/order";
 import { OrderRepository } from "../repositories/order";
 import { RecipeRepository } from "../repositories/recipe";
@@ -9,7 +8,6 @@ export class OrdersService {
   constructor(
     private orderRepository: OrderRepository,
     private recipeRepository: RecipeRepository,
-    private sqsService: AwsSqsService
   ) {}
 
 
@@ -28,7 +26,7 @@ export class OrdersService {
       // });
     }
     console.log("Orders created with ids:", orders);
-    return { orders_created: orders.length, status: "CREATEDsdsada" };
+    return { orders_created: orders.length, status: "CREATED" };
   }
 
   async getAllOrders() {
@@ -42,5 +40,15 @@ export class OrdersService {
   // historical(ready), pending, inProgress orders
   async getOrdersByStatus(status: OrderStatusEnum) {
     return await this.orderRepository.findByStatus(status);
+  }
+
+  // recibimos un mensaje de la bodega y lo procesamos
+  async processIngredientsRequest(message: any) {
+    console.log("Processing ingredients request:", message);
+    const { orderId, ingredientsReady } = message;
+    await this.orderRepository.updateStatus(orderId, OrderStatusEnum.IN_PROGRESS);
+    console.log("Processing ingredients request:", ingredientsReady);
+    console.log("Created order:", orderId);
+    await this.orderRepository.updateStatus(orderId, OrderStatusEnum.READY);
   }
 }

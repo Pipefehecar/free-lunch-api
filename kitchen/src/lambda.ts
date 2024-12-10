@@ -10,6 +10,7 @@ import {
 import { Callback } from "aws-lambda/handler";
 import "reflect-metadata";
 import { AppModule } from "./app";
+import { OrdersService } from "./services/order";
 
 let lambdaProxy: Handler;
 
@@ -31,13 +32,18 @@ export const handler = async (
   }
   return lambdaProxy(event, context, callback);
 };
-
+let appInstance: any;
 export const sqsHandler = async (event: SQSEvent) => {
+  if (!appInstance) {
+    const app = await NestFactory.create(AppModule);
+    await app.init();
+    appInstance = app;
+  }
+  const ordersService = appInstance.get(OrdersService);
   for (const record of event.Records) {
     const messageBody = JSON.parse(record.body);
     console.log("Received SQS message in Kitchen:", messageBody);
-    // Aquí procesarías la lógica: por ejemplo, si la bodega responde que ya hay ingredientes,
-    // actualizarías la orden en Postgres usando tu servicio.
+    await ordersService.processIngredientsRequest(messageBody);
   }
   return;
 };
