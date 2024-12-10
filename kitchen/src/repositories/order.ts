@@ -59,6 +59,13 @@ export class OrderRepository {
   async findByStatus(status: OrderStatusEnum): Promise<Order[]> {
     return await Order.findAll({
       where: { status },
+
+      include: [
+        {
+          model: Recipe,
+          attributes: ["name"],
+        },
+      ],
     });
   }
 }

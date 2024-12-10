@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
-import { OrderStatusEnum } from "../models/enums/order";
 import { OrdersService } from "../services/order";
-import { RequestService } from "src/services/request";
+import { RequestService } from "../services/request";
+import { OrderStatusQueryDto } from "../dtos/order-status";
 
 @Controller()
 export class OrdersController {
@@ -24,7 +24,7 @@ export class OrdersController {
     return await this.ordersService.getOrderById(id);
   }
   @Get("orders")
-  async getOrdersByStatus(@Query("status") status: OrderStatusEnum) {
-    return await this.ordersService.getOrdersByStatus(status);
+  async getOrdersByStatus(@Query() query: OrderStatusQueryDto) {
+    return await this.ordersService.getOrdersByStatus(query.status);
   }
 }

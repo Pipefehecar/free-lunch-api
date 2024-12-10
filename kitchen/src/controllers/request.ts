@@ -1,4 +1,4 @@
-import { RequestService } from "src/services/request";
+import { RequestService } from "../services/request";
 
 import { Controller, Get } from "@nestjs/common";
 

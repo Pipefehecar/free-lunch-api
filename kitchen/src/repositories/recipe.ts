@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { Recipe } from "../models/recipe";
 import { RecipeIngredient } from "../models/recipe-ingredient";
 import { InjectModel } from "@nestjs/sequelize";
-import { Ingredient } from "src/models/ingredient";
-import { IngredientUnitEnum } from "src/models/enums/ingredient";
+import { Ingredient } from "../models/ingredient";
+import { IngredientUnitEnum } from "../models/enums/ingredient";
 
 @Injectable()
 export class RecipeRepository {
@@ -14,18 +14,19 @@ export class RecipeRepository {
   ) {}
 
   async findAll(): Promise<Recipe[]> {
-    return await this.recipeModel.findAll({
-      attributes: ['id', 'name'],
+    const recipes = await this.recipeModel.findAll({
       include: [{
         model: Ingredient,
-        attributes: ['id', 'name'],
         through: {
-          attributes: ['quantity', 'unit']
-        }
+          attributes: ['quantity', 'unit'],
+        },
+        attributes: ['id', 'name'],
       }],
-      raw: false,
+      attributes: ['id', 'name'],
       nest: true
     });
+    return recipes;
+
   }
 
   async findById(id: number): Promise<Recipe | null> {

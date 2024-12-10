@@ -10,6 +10,7 @@ export class RequestService {
   }
 
   async getAll() {
+    //traemos las ordenes incluidas las ordenes y los nombres de las recetas
     return await this.requestRepository.getAll();
   }
 }

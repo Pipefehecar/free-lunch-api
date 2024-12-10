@@ -15,6 +15,7 @@ export const configuration = () => ({
       requestQueueUrl: process.env.SQS_REQUEST_QUEUE_URL,
       endpoint: process.env.AWS_ENDPOINT,
     },
+    
   },
   postgres: {
     host: process.env.DB_HOST,

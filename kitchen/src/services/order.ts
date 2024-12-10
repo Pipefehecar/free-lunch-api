@@ -28,7 +28,7 @@ export class OrdersService {
       // });
     }
     console.log("Orders created with ids:", orders);
-    return { orders_created: orders.length, status: "CREATED" };
+    return { orders_created: orders.length, status: "CREATEDsdsada" };
   }
 
   async getAllOrders() {

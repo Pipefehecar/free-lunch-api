@@ -1,5 +1,6 @@
-import { RecipeRepository } from "../repositories/recipe";
 import { Injectable } from "@nestjs/common";
+import { RecipeRepository } from "../repositories/recipe";
+import { Ingredient } from "src/models/ingredient";
 
 @Injectable()
 export class RecipesService {
@@ -7,5 +8,5 @@ export class RecipesService {
 
   async findAll() {
     return await this.recipeRepository.findAll();
-  }
+}
 }
