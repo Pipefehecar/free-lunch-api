@@ -22,6 +22,7 @@ phases:
     commands:
       - npm install
       - ls
+      - npm install -g serverless@3.38.0
       - serverless plugin install -n serverless-plugin-optimize
       - serverless plugin install -n serverless-iam-roles-per-function
       - serverless plugin install -n serverless-plugin-split-stacks
