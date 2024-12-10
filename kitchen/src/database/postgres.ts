@@ -22,6 +22,13 @@ import { KitchenRequest } from '../models/kitchen-request';
         models: [Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order],
         autoLoadModels: true,
         synchronize: true,
+        //agregamos configuracion ssl
+        dialectOptions: {
+          ssl: {
+            require: false,
+            rejectUnauthorized: false,
+          },
+        },
         sync: {
           alter: true,
         },

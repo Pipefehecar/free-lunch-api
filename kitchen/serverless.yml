@@ -1,20 +1,21 @@
-service: kitchen-service
+service: kitchen-service-v3
 
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: us-east-1
   profile: free-launch
   stage: dev
+
   environment:
-    PG_HOST: ${env:PG_HOST}
-    PG_USER: ${env:PG_USER}
-    PG_PASSWORD: ${env:PG_PASSWORD}
-    PG_DATABASE: ${env:PG_DATABASE}
-    SQS_REQUEST_QUEUE: ${cf:warehouse-service-${self:provider.stage}.RequestQueueUrl}
-    SQS_RESPONSE_QUEUE: ${cf:warehouse-service-${self:provider.stage}.ResponseQueueUrl}
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_DATABASE: ${env:DB_DATABASE}
+    # SQS_REQUEST_QUEUE_ARN: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+    # SQS_RESPONSE_QUEUE_ARN: ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
   iam:
     role:
       statements:
@@ -25,27 +26,32 @@ provider:
             - sqs:DeleteMessage
             - sqs:GetQueueAttributes
           Resource:
-            - ${cf:warehouse-service-${self:provider.stage}.RequestQueueArn}
-            - ${cf:warehouse-service-${self:provider.stage}.ResponseQueueArn}
+            - "*"
+  apiGateway:
+    restApiId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiRootResourceId}
 
 functions:
-  api:
+  KitchenApi:
     handler: src/lambda.handler
     events:
-      - httpApi:
-          path: /orders
+      - http:
+          path: /api/v1/kitchen
           method: post
-      - httpApi:
-          path: /orders
+      - http:
+          path: /api/v1/kitchen
           method: get
 
-  sqsListener:
-    handler: src/lambda.sqsHandler
-    events:
-      - sqs:
-          arn: ${cf:warehouse-service-${self:provider.stage}.ResponseQueueArn}
-          batchSize: 1
+  # sqsListener:
+  #   handler: src/lambda.sqsHandler
+  #   events:
+  #     - sqs:
+  #         arn: ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+  #         batchSize: 1
 
 plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
+  - serverless-offline
+# resources:
+#   - ${file(../aws-resources/gateway-response.yml)}
