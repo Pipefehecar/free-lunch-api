@@ -1,10 +1,10 @@
-service: warehouse-service
+service: warehouse-service-v3
 
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: us-east-1
   profile: free-launch
   stage: ${env:STAGE}
@@ -15,7 +15,6 @@ provider:
     SQS_REQUEST_QUEUE: ${env:SQS_REQUEST_QUEUE} # where kitchen asks for ingredients / warehouse receives the order ingredients
 
 functions:
-
   sqsListener:
     handler: dist/lambda.sqsHandler
     events:
@@ -25,3 +24,5 @@ functions:
 plugins:
   - serverless-plugin-typescript
   - serverless-plugin-monorepo
+resources:
+  - ${file(../aws-resources/gateway-response.yml)}

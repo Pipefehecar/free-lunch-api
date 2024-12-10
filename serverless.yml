@@ -1,6 +1,13 @@
-service: free-launch-api-monorepo
+service: free-launch-api-monorepo-v3
 
-frameworkVersion: '3'
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  profile: free-launch
+  stage: dev
 
 plugins:
   - serverless-plugin-monorepo
@@ -8,3 +15,47 @@ plugins:
 workspaces:
   - kitchen
   - warehouse
+
+resources:
+  Resources:
+    IngredientsRequestQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: warehouse-ingredients-request-queue-v2
+        VisibilityTimeout: 30
+
+    IngredientsResponseQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: warehouse-ingredients-response-queue-v2
+        VisibilityTimeout: 30
+
+    ApiGateway:
+      Type: "AWS::ApiGateway::RestApi"
+      Properties:
+        Name: ApiGatewayFreeServerless
+        FailOnWarnings: "true"
+
+    GatewayResponseDefault4XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId: !Ref ApiGateway
+
+  Outputs:
+    RequestQueueUrl:
+      Value: !Ref IngredientsRequestQueue
+    RequestQueueArn:
+      Value: !GetAtt IngredientsRequestQueue.Arn
+    ResponseQueueUrl:
+      Value: !Ref IngredientsResponseQueue
+    ResponseQueueArn:
+      Value: !GetAtt IngredientsResponseQueue.Arn
+    ApiGatewayRestApiId:
+      Value: !Ref ApiGateway
+    ApiGatewayRestApiRootResourceId:
+      Value: !GetAtt ApiGateway.RootResourceId
+  
