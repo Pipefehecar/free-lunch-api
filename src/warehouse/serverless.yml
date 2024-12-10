@@ -1,0 +1,92 @@
+service: warehouse-service
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  profile: free-launch
+  stage: dev
+  environment:
+    DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
+    DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
+    # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
+    # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+          Resource:
+            - ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+            - ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - !GetAtt InventoryTable.Arn
+            - !GetAtt PurchasesTable.Arn
+
+  apiGateway:
+    restApiId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRootResourceId}
+
+functions:
+  api:
+    handler: src/lambda.handler
+    events:
+      - httpApi:
+          path: /api/v1
+          method: get
+
+  sqsListener:
+    handler: src/lambda.sqsHandler
+    events:
+      - sqs:
+          arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+          batchSize: 1
+
+resources:
+  Resources:
+    # DynamoDB Tables
+    InventoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: warehouse-inventory-table
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    PurchasesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: warehouse-purchases-table
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+
+  Outputs:
+    InventoryTableName:
+      Value: !Ref InventoryTable
+    PurchasesTableName:
+      Value: !Ref PurchasesTable
