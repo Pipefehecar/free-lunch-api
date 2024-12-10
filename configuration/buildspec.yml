@@ -21,13 +21,19 @@ phases:
       nodejs: 20.x
     commands:
       - npm install
-      - ls 
+      - ls
+      - serverless plugin install -n serverless-plugin-optimize
+      - serverless plugin install -n serverless-iam-roles-per-function
+      - serverless plugin install -n serverless-plugin-split-stacks
   build:
     commands:
       - echo "Start Deploy REST API Free launc"
       - echo Build started on `date`
       ##################################### Generate serverless package. ###################################
-      - npx serverless deploy
+      # - npx serverless deploy
+      - sls package --package serverless-package --config serverless.yml
+      - sls deploy --package serverless-package --config serverless.yml
+
 artifacts:
   files:
     - /**/*
