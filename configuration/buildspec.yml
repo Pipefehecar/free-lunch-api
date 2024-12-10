@@ -21,6 +21,7 @@ phases:
       nodejs: 20.x
     commands:
       - npm install
+      - ls 
   build:
     commands:
       - echo "Start Deploy REST API Free launc"
