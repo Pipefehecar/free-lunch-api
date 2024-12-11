@@ -24,7 +24,8 @@ phases:
       - ls
       - npm install -g serverless@3.38.0
       - aws s3 cp s3://envs-test-deploy/.env ./kitchen/.env
-
+      - aws s3 cp s3://envs-test-deploy/.env .env
+      - aws s3 cp s3://envs-test-deploy/.env ./warehouse/.env
   build:
     commands:
       - echo "Start Deploy REST API Free launc"

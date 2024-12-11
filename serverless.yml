@@ -6,7 +6,6 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  profile: free-launch
   stage: dev
 
 plugins:
@@ -58,4 +57,3 @@ resources:
       Value: !Ref ApiGateway
     ApiGatewayRestApiRootResourceId:
       Value: !GetAtt ApiGateway.RootResourceId
-  
