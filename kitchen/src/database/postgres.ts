@@ -13,22 +13,35 @@ import { KitchenRequest } from '../models/kitchen-request';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        dialect: 'postgres',
-        host: configService.get('postgres.host'),
-        port: configService.get('postgres.port'),
-        username: configService.get('postgres.username'),
-        password: configService.get('postgres.password'),
-        database: configService.get('postgres.database'),
+        dialect: "postgres",
+        host: configService.get("postgres.host"),
+        port: configService.get("postgres.port"),
+        username: configService.get("postgres.username"),
+        password: configService.get("postgres.password"),
+        database: configService.get("postgres.database"),
         models: [Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order],
         autoLoadModels: true,
         synchronize: true,
+        ssl: true,
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false, // Cambia a `true` si usas un certificado válido
+          },
+        },
         sync: {
           alter: true,
         },
         logging: false,
       }),
     }),
-    SequelizeModule.forFeature([Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order]), // Agregar esto aquí también
+    SequelizeModule.forFeature([
+      Recipe,
+      RecipeIngredient,
+      Ingredient,
+      KitchenRequest,
+      Order,
+    ]), // Agregar esto aquí también
   ],
   exports: [SequelizeModule], // Importante: exportar SequelizeModule
 })

@@ -4,26 +4,20 @@
   "private": true,
   "description": "Monorepo for free-launch microservices",
   "scripts": {
-    "deploy:all": "npm run deploy:management && npm run deploy:kitchen && npm run deploy:warehouse",
-    "remove:all": "npm run remove:management && npm run remove:kitchen && npm run remove:warehouse",
-    "remove:management": "cd management && npx serverless remove",
-    "remove:kitchen": "cd kitchen && npx serverless remove",
-    "remove:warehouse": "cd warehouse && npx serverless remove",
-    "deploy:management": "cd management && npx serverless deploy",
-    "deploy:kitchen": "cd kitchen && npx serverless deploy",
-    "deploy:warehouse": "cd warehouse && npx serverless deploy",
-    "offline:management": "cd management && npx serverless offline",
-    "offline:kitchen": "cd kitchen && npx serverless offline"
+    "sls:deploy": "npx serverless deploy && cd kitchen && npx serverless deploy && cd warehouse && npx serverless deploy"
   },
   "devDependencies": {
     "serverless": "^3.32.0",
-    "serverless-offline": "^12.0.4"
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-common-excludes": "^4.0.0",
+    "serverless-plugin-include-dependencies": "^6.1.1"
   },
   "dependencies": {
     "aws-sdk": "^2.1421.0",
     "axios": "^1.5.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.20.2",
-    "serverless-plugin-monorepo": "^0.11.0"
+    "serverless-plugin-monorepo": "^0.11.0",
+    "uuid": "^11.0.3"
   }
 }

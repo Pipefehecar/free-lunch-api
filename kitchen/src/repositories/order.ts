@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { OrderStatusEnum } from "../models/enums/order";
 import { Order } from "../models/order";
 import { Recipe } from "../models/recipe";
+import { KitchenRequest } from "../models/kitchen-request";
 
 @Injectable()
 export class OrderRepository {
@@ -64,6 +65,10 @@ export class OrderRepository {
         {
           model: Recipe,
           attributes: ["name"],
+        },
+        {
+          model: KitchenRequest,
+          attributes: ["notes"],
         },
       ],
     });
