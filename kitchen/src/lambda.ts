@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import * as serverlessExpress from "@vendia/serverless-express";
+import { configure } from "@vendia/serverless-express"; // Ajustado para la nueva API
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
@@ -18,7 +18,7 @@ async function bootstrap() {
   await app.init();
 
   const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  return configure({ app: expressApp }); 
 }
 
 export const handler = async (
@@ -36,8 +36,6 @@ export const sqsHandler = async (event: SQSEvent) => {
   for (const record of event.Records) {
     const messageBody = JSON.parse(record.body);
     console.log("Received SQS message in Kitchen:", messageBody);
-    // Aquí procesarías la lógica: por ejemplo, si la bodega responde que ya hay ingredientes,
-    // actualizarías la orden en Postgres usando tu servicio.
   }
   return;
 };
