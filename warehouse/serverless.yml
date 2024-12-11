@@ -7,9 +7,9 @@ provider:
   runtime: nodejs20.x
   region: us-east-1
   stage: dev
-  # environment:
-  #   DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
-  #   DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
+  environment:
+    DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
+    DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
     # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
     # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
   iam:
@@ -22,7 +22,7 @@ provider:
             - sqs:DeleteMessage
             - sqs:GetQueueAttributes
           Resource:
-            - '*'
+            - "*"
 
         - Effect: Allow
           Action:
@@ -33,7 +33,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - '*'
+            - "*"
 
   apiGateway:
     restApiId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiId}
@@ -57,6 +57,33 @@ functions:
   #         # arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
   #         arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
   #         batchSize: 1
+
+resources:
+  Resources:
+    # DynamoDB Tables
+    InventoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: warehouse-inventory-table-v2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    PurchasesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: warehouse-purchases-table-v2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 
 plugins:
   - serverless-plugin-typescript
