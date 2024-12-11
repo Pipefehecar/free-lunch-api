@@ -1,4 +1,4 @@
-service: warehouse-service-v3
+service: warehouse-service-v4
 
 useDotenv: true
 
@@ -64,7 +64,7 @@ resources:
     InventoryTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: warehouse-inventory-table-v2
+        TableName: warehouse-inventory-table-v4
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -76,7 +76,7 @@ resources:
     PurchasesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: warehouse-purchases-table-v2
+        TableName: warehouse-purchases-table-v4
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
