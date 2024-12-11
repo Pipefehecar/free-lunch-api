@@ -7,9 +7,9 @@ provider:
   runtime: nodejs20.x
   region: us-east-1
   stage: dev
-  environment:
-    DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
-    DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
+  # environment:
+  #   DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
+  #   DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
     # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
     # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
   iam:
@@ -22,8 +22,7 @@ provider:
             - sqs:DeleteMessage
             - sqs:GetQueueAttributes
           Resource:
-            - ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
-            - ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+            - '*'
 
         - Effect: Allow
           Action:
@@ -34,23 +33,31 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - !GetAtt InventoryTable.Arn
-            - !GetAtt PurchasesTable.Arn
+            - '*'
 
   apiGateway:
-    restApiId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRestApiId}
-    restApiRootResourceId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRootResourceId}
+    restApiId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiRootResourceId}
 
 functions:
-  sqsListener:
-    handler: src/lambda.sqsHandler
+  warehouseApi:
+    handler: src/lambda.handler
     events:
-      - sqs:
-          arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
-          batchSize: 1
+      - http:
+          path: /api/v1/purchases
+          method: get
+      - http:
+          path: /api/v1/inventory
+          method: get
+
+  # sqsListener:
+  #   handler: src/lambda.sqsHandler
+  #   events:
+  #     - sqs:
+  #         # arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+  #         arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
+  #         batchSize: 1
 
 plugins:
   - serverless-plugin-typescript
   - serverless-plugin-monorepo
-resources:
-  - ${file(../aws-resources/gateway-response.yml)}
