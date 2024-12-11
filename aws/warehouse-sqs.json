@@ -1,0 +1,20 @@
+{
+    "Records": [
+        {
+            "messageId": "1a2b3c4d-5678-90ab-cdef-EXAMPLE11111",
+            "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
+            "body": "{\"orderId\": \"12345\", \"ingredients\": [{\"id\": \"5\", \"name\": \"Ketchup\", \"quantity\": 1}, {\"id\": \"8\", \"name\": \"Cheese\", \"quantity\": 2}, {\"id\": \"9\", \"name\": \"Meat\", \"quantity\": 4}]}",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "SentTimestamp": "1646581218372",
+                "SenderId": "ABCDEFGHIJKLMNO",
+                "ApproximateFirstReceiveTimestamp": "1646581218384"
+            },
+            "messageAttributes": {},
+            "md5OfBody": "098f6bcd4621d373cade4e832627b4f6",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:my-queue",
+            "awsRegion": "us-east-1"
+        }
+    ]
+}

@@ -12,6 +12,7 @@ provider:
     DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
     SQS_RESPONSE_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
     SQS_REQUEST_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
+    REGION : ${self:provider.region}
   iam:
     role:
       statements:

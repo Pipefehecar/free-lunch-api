@@ -15,13 +15,9 @@ export class AwsDynamoService {
   private purchasesTable: string;
 
   constructor(private readonly configService: ConfigService) {
-    const { region, credentials, dynamo } = this.configService.get("aws");
+    const { region, dynamo } = this.configService.get("aws");
     const client = new DynamoDBClient({
-      region: region,
-      credentials: {
-        accessKeyId: credentials.accessKeyId,
-        secretAccessKey: credentials.secretAccessKey,
-      },
+      region: region || "us-east-1",
     });
     this.inventoryTable = dynamo.inventoryTable;
     this.purchasesTable = dynamo.purchasesTable;

@@ -7,6 +7,7 @@ import { FarmersMarketService } from "./farmers-market";
 @Injectable()
 export class InventoryService {
   private responseQueueUrl: string;
+  private requestQueueUrl: string;
 
   constructor(
     private readonly awsSqsService: AwsSqsService,
@@ -14,13 +15,15 @@ export class InventoryService {
     private readonly farmersMarketService: FarmersMarketService,
     private configService: ConfigService
   ) {
-    const queueUrl = this.configService.get<string>("aws.sqs.responseQueueUrl");
-    if (!queueUrl) {
+    const responseQueue = this.configService.get<string>("aws.sqs.responseQueueUrl");
+    const requestQueue = this.configService.get<string>("aws.sqs.requestQueueUrl");
+    if (!responseQueue || !requestQueue) {
       throw new Error(
-        "SQS_RESPONSE_QUEUE_URL is not defined in environment variables"
+        "QUEUE_URL is not defined in environment variables"
       );
     }
-    this.responseQueueUrl = queueUrl;
+    this.responseQueueUrl = responseQueue;
+    this.requestQueueUrl = requestQueue;
   }
 
   async getInventory() {
@@ -61,7 +64,7 @@ export class InventoryService {
         }
         if (NOT_READY) {
           // enviamos un mensaje una nueva orden a warehous
-          await this.awsSqsService.sendMessage(this.responseQueueUrl, message);
+          await this.awsSqsService.sendMessage(this.requestQueueUrl, message);
         }
       } else {
         // order is ready for kitchen
