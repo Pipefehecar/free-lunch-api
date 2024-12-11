@@ -72,7 +72,7 @@ Antes de iniciar, asegúrate de tener instalado:
 1. Clona este repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/free-lunch-api.git
+git clone https://github.com/pipefehecar/free-lunch-api.git
 cd free-lunch-api
 ```
 2. Instala las dependencias:
