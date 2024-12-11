@@ -35,11 +35,12 @@ phases:
 
       - serverless plugin install -n serverless-dotenv-plugin
       - serverless plugin install -n serverless-plugin-typescript
-      - echo "Start Deploy REST API Free launc raiz "
-      - sls package --package serverless-package --config serverless.yml
-      - sls deploy --package serverless-package --config serverless.yml
-      - echo Build completed on `date`
-      - echo "deploy kitchen"
+
+      # - echo "Start Deploy REST API Free launc raiz "
+      # - sls package --package serverless-package --config serverless.yml
+      # - sls deploy --package serverless-package --config serverless.yml
+      # - echo Build completed on `date`
+      # - echo "deploy kitchen"
 
       - cd kitchen
       - sls package --package serverless-package --config serverless.yml
