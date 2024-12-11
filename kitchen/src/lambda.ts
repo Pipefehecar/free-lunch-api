@@ -16,7 +16,7 @@ let lambdaProxy: Handler;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix("api/v1");
+  app.setGlobalPrefix("kitchen/api/v1");
   await app.init();
 
   const expressApp = app.getHttpAdapter().getInstance();

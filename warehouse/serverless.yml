@@ -42,16 +42,20 @@ provider:
 functions:
   warehouseApi:
     handler: src/lambda.handler
+    description: "Warehouse API"
+    timeout: 30
     events:
       - http:
-          path: /warehouse/purchases
+          path: /warehouse/api/v1/purchases
           method: get
       - http:
-          path: /warehouse/inventory
+          path: /warehouse/api/v1/inventory
           method: get
 
   sqsListener:
     handler: src/lambda.sqsHandler
+    description: "Listen to the request queue"
+    timeout: 60
     events:
       - sqs:
           arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}

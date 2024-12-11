@@ -33,22 +33,26 @@ provider:
 functions:
   KitchenApi:
     handler: src/lambda.handler
+    description: "Kitchen API"
+    timeout: 30
     events:
       - http:
-          path: /api/v1/requests
+          path: /kitchen/api/v1/requests
           method: get
       - http:
-          path: /api/v1/orders
+          path: /kitchen/api/v1/orders
           method: get
       - http:
-          path: /api/v1/orders
+          path: /kitchen/api/v1/orders
           method: post
       - http:
-          path: /api/v1/recipes
+          path: /kitchen/api/v1/recipes
           method: get
 
   sqsListener:
     handler: src/lambda.sqsHandler
+    description: "Listen to the request queue"
+    timeout: 60
     events:
       - sqs:
           arn: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
