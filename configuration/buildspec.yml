@@ -33,11 +33,8 @@ phases:
       ##################################### Generate serverless package. ###################################
       # - npx serverless deploy
 
-      - serverless plugin install -n serverless-dotenv-plugin- npm install
-      - serverless plugin install -n serverless-plugin-optimize
-      - serverless plugin install -n serverless-iam-roles-per-function
-      - serverless plugin install -n serverless-plugin-typescri
-
+      - serverless plugin install -n serverless-dotenv-plugin
+      - serverless plugin install -n serverless-plugin-typescript
       - echo "Start Deploy REST API Free launc raiz "
       - sls package --package serverless-package --config serverless.yml
       - sls deploy --package serverless-package --config serverless.yml
