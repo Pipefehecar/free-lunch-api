@@ -49,7 +49,15 @@ functions:
       - http:
           path: /api/v1/orders
           method: post
-
+      - http:
+          path: /requests
+          method: get
+      - http:
+          path: /orders
+          method: get
+      - http:
+          path: /orders
+          method: post
   # sqsListener:
   #   handler: src/lambda.sqsHandler
   #   events:
