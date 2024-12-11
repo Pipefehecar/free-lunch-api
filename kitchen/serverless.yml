@@ -13,8 +13,8 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASSWORD: ${env:DB_PASSWORD}
     DB_DATABASE: ${env:DB_DATABASE}
-    # SQS_REQUEST_QUEUE_ARN: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
-    # SQS_RESPONSE_QUEUE_ARN: ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+    SQS_REQUEST_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
+    SQS_RESPONSE_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
   iam:
     role:
       statements:
@@ -47,12 +47,12 @@ functions:
           path: /api/v1/recipes
           method: get
 
-  # sqsListener:
-  #   handler: src/lambda.sqsHandler
-  #   events:
-  #     - sqs:
-  #         arn: ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
-  #         batchSize: 1
+  sqsListener:
+    handler: src/lambda.sqsHandler
+    events:
+      - sqs:
+          arn: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
+          batchSize: 1
 
 plugins:
   - serverless-plugin-typescript
