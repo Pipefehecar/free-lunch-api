@@ -44,10 +44,10 @@ functions:
     handler: src/lambda.handler
     events:
       - http:
-          path: /api/warehouse/purchases
+          path: /warehouse/purchases
           method: get
       - http:
-          path: /api/warehouse/inventory
+          path: /warehouse/inventory
           method: get
 
   # sqsListener:
