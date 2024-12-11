@@ -6,7 +6,7 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stage: ${env:STAGE}
+  stage: dev
   environment:
     DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
     DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
