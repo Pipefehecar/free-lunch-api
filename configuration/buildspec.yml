@@ -24,10 +24,13 @@ phases:
       - ls
       - npm install -g serverless@3.38.0
       - aws s3 cp s3://envs-test-deploy/.env ./kitchen/.env
-
+      - cd kitchen
+      - npm install
       - serverless plugin install -n serverless-plugin-optimize
       - serverless plugin install -n serverless-iam-roles-per-function
       - serverless plugin install -n serverless-plugin-split-stacks
+      - serverless plugin install -n serverless-plugin-typescript
+      - serverless plugin install -n serverless-dotenv-plugin
   build:
     commands:
       - echo "Start Deploy REST API Free launc"
