@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { Order } from '../models/order';
-import { Recipe } from '../models/recipe';
-import { RecipeIngredient } from '../models/recipe-ingredient';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Ingredient } from '../models/ingredient';
-import { KitchenRequest } from '../models/kitchen-request';
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { SequelizeModule } from "@nestjs/sequelize";
+import { Ingredient } from "../models/ingredient";
+import { KitchenRequest } from "../models/kitchen-request";
+import { Order } from "../models/order";
+import { Recipe } from "../models/recipe";
+import { RecipeIngredient } from "../models/recipe-ingredient";
 
 @Module({
   imports: [
@@ -22,11 +22,10 @@ import { KitchenRequest } from '../models/kitchen-request';
         models: [Recipe, RecipeIngredient, Ingredient, KitchenRequest, Order],
         autoLoadModels: true,
         synchronize: true,
-        ssl: true,
         dialectOptions: {
           ssl: {
-            require: true,
-            rejectUnauthorized: false, // Cambia a `true` si usas un certificado válido
+            require: false,
+            rejectUnauthorized: false,
           },
         },
         sync: {

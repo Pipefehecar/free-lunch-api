@@ -10,9 +10,9 @@
     "start:build:dev": "npm run build && npm run dev"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.705.0",
-    "@aws-sdk/client-sqs": "^3.100.0",
-    "@aws-sdk/lib-dynamodb": "^3.705.0",
+    "@aws-sdk/client-dynamodb": "^3.709.0",
+    "@aws-sdk/client-sqs": "^3.709.0",
+    "@aws-sdk/lib-dynamodb": "^3.709.0",
     "@codegenie/serverless-express": "^4.16.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.146",
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^18.19.67",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-offline": "^9.3.1",
