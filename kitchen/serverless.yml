@@ -36,10 +36,10 @@ functions:
     handler: src/lambda.handler
     events:
       - http:
-          path: /api/v1/kitchen
+          path: /api/v1
           method: post
       - http:
-          path: /api/v1/kitchen
+          path: /api/v1
           method: get
 
   # sqsListener:
