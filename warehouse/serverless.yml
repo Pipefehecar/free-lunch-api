@@ -10,8 +10,8 @@ provider:
   environment:
     DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
     DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
-    # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
-    # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
+    SQS_RESPONSE_QUEUE: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
+    SQS_REQUEST_QUEUE: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
   iam:
     role:
       statements:
@@ -50,13 +50,12 @@ functions:
           path: /warehouse/inventory
           method: get
 
-  # sqsListener:
-  #   handler: src/lambda.sqsHandler
-  #   events:
-  #     - sqs:
-  #         # arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
-  #         arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
-  #         batchSize: 1
+  sqsListener:
+    handler: src/lambda.sqsHandler
+    events:
+      - sqs:
+          arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
+          batchSize: 1
 
 resources:
   Resources:

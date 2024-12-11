@@ -58,5 +58,3 @@ plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
   - serverless-offline
-# resources:
-#   - ${file(../aws-resources/gateway-response.yml)}
