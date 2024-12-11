@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { KitchenRequest } from "../models/kitchen-request";
-import { Recipe } from "src/models/recipe";
-import { Order } from "src/models/order";
+import { Recipe } from "../models/recipe";
+import { Order } from "../models/order";
 
 @Injectable()
 export class RequestRepository {

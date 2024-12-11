@@ -10,18 +10,27 @@
     "start:build:dev": "npm run build && npm run dev"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.705.0",
+    "@aws-sdk/client-sqs": "^3.100.0",
+    "@aws-sdk/lib-dynamodb": "^3.705.0",
+    "@codegenie/serverless-express": "^4.16.0",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.0.0",
+    "@vendia/serverless-express": "^4.7.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.1",
-    "@vendia/serverless-express": "^4.7.2"
+    "dotenv": "^16.4.7",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "typescript": "^5.0.0",
-    "@types/aws-lambda": "^8.10.0"
+    "@types/aws-lambda": "^8.10.146",
+    "@types/node": "^18.19.67",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-offline": "^9.3.1",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.7.2"
   }
 }

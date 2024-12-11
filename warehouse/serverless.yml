@@ -8,17 +8,46 @@ provider:
   region: us-east-1
   stage: ${env:STAGE}
   environment:
-    DYNAMODB_TABLE_INVENTORY: ${env:DYNAMODB_TABLE_INVENTORY}
-    DYNAMODB_TABLE_PURCHASES: ${env:DYNAMODB_TABLE_PURCHASES}
-    SQS_RESPONSE_QUEUE: ${env:SQS_RESPONSE_QUEUE} # where warehouse sends the ingredients
-    SQS_REQUEST_QUEUE: ${env:SQS_REQUEST_QUEUE} # where kitchen asks for ingredients / warehouse receives the order ingredients
+    DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
+    DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
+    # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
+    # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+          Resource:
+            - ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+            - ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - !GetAtt InventoryTable.Arn
+            - !GetAtt PurchasesTable.Arn
+
+  apiGateway:
+    restApiId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRootResourceId}
 
 functions:
   sqsListener:
-    handler: dist/lambda.sqsHandler
+    handler: src/lambda.sqsHandler
     events:
       - sqs:
-          arn: arn:aws:sqs:us-east-1:123456789012:${env:SQS_REQUEST_QUEUE}
+          arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+          batchSize: 1
 
 plugins:
   - serverless-plugin-typescript

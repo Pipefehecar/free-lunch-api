@@ -8,8 +8,34 @@ provider:
   region: us-east-1
   stage: dev
 
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  # profile: free-launch
+  stage: dev
+
+custom:
+  webpack:
+    concurrency: 3
+  commonExcludes:
+    - node_modules/**
+# plugins:
+#   - serverless-plugin-monorepo
 plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
   - serverless-plugin-monorepo
+functions:
+  api:
+    handler: kitchen/src/lambda.handler
+    events:
+      - httpApi:
+          path: /api/v1
+          method: post
+      - httpApi:
+          path: /api/v1
+          method: get
 
 workspaces:
   - kitchen

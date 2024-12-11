@@ -1,14 +1,8 @@
 import { NestFactory } from "@nestjs/core";
-import {
-  APIGatewayProxyEvent,
-  APIGatewayProxyResult,
-  Context,
-  Handler,
-  SQSEvent,
-} from "aws-lambda";
-import { Callback } from "aws-lambda/handler";
-import { AppModule } from "./app.module";
-import serverlessExpress from "@vendia/serverless-express";
+import serverlessExpress from "@codegenie/serverless-express";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context, Handler, SQSEvent } from "aws-lambda";
+import { AppModule } from "./app";
+import { InventoryService } from "./services/inventory";
 
 let lambdaProxy: Handler;
 
@@ -31,12 +25,23 @@ export const handler = async (
   return lambdaProxy(event, context, callback);
 };
 
+
+let appInstance: any;
 export const sqsHandler = async (event: SQSEvent) => {
+
+  // Obtenemos InventoryService desde el appInstance (DI de Nest)
+  if (!appInstance) {
+    // Si no está inicializado, lo inicializamos (puede ser que no esté inicializado si se invoca directamente SQS)
+    const app = await NestFactory.create(AppModule);
+    await app.init();
+    appInstance = app;
+  }
+
+  const inventoryService = appInstance.get(InventoryService);
+
   for (const record of event.Records) {
     const messageBody = JSON.parse(record.body);
-    console.log("Received SQS message in warehouse:", messageBody);
-    // Aquí procesarías la lógica: por ejemplo, si la bodega responde que ya hay ingredientes,
-    // actualizarías la orden en Postgres usando tu servicio.
+    await inventoryService.processIngredientsRequest(messageBody);
   }
   return;
 };
