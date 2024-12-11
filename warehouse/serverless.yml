@@ -10,8 +10,8 @@ provider:
   environment:
     DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
     DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
-    SQS_RESPONSE_QUEUE: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
-    SQS_REQUEST_QUEUE: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
+    SQS_RESPONSE_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
+    SQS_REQUEST_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
   iam:
     role:
       statements:

@@ -12,7 +12,7 @@ export const configuration = () => ({
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
     },
     sqs: {
-      requestQueueUrl: process.env.SQS_REQUEST_QUEUE_URL,
+      responseQueueUrl: process.env.SQS_RESPONSE_QUEUE_URL,
       endpoint: process.env.AWS_ENDPOINT,
     },
     dynamo: {

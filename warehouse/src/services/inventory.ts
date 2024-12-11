@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AwsDynamoService } from "./aws-dynamo";
 import { AwsSqsService } from "./aws-sqs";
 import { FarmersMarketService } from "./farmers-market";
@@ -10,9 +11,10 @@ export class InventoryService {
   constructor(
     private readonly awsSqsService: AwsSqsService,
     private readonly awsDynamoService: AwsDynamoService,
-    private readonly farmersMarketService: FarmersMarketService
+    private readonly farmersMarketService: FarmersMarketService,
+    private configService: ConfigService
   ) {
-    const queueUrl = process.env.SQS_RESPONSE_QUEUE_URL;
+    const queueUrl = this.configService.get<string>("aws.sqs.responseQueueUrl");
     if (!queueUrl) {
       throw new Error(
         "SQS_RESPONSE_QUEUE_URL is not defined in environment variables"
