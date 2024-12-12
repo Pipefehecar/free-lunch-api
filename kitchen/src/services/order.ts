@@ -38,16 +38,42 @@ export class OrdersService {
         requestId
       );
       orders.push(orderId);
-      await this.awsSqsService.sendMessage({
-        orderId: orderId,
-        ingredients: ingredients,
-        action: "REQUEST_INGREDIENTS",
-      });
+      // await this.awsSqsService.sendMessage({
+      //   orderId: orderId,
+      //   ingredients: ingredients,
+      //   action: "REQUEST_INGREDIENTS",
+      // });
+      console.log("createOrders - Ingredients:", ingredients);
+      console.log("createOrders - Order created with id:", orderId);
+      
+      await this.sendIngredientsRequest(orderId, ingredients);
     }
     
     console.log("Orders created with ids:", orders);
     return { orders_created: orders.length, status: "CREATED" };
   }
+
+  async sendIngredientsRequest(orderId: string, ingredients: any) {
+    try {
+      const response = await this.awsSqsService.sendMessage({
+        orderId: orderId,
+        ingredients: ingredients,
+        action: "REQUEST_INGREDIENTS",
+      });
+
+      // Imprimir la respuesta
+      console.log("SQS Message Sent Successfully:", response);
+
+      // Si quieres validar un atributo específico de la respuesta
+      if (response?.MessageId) {
+        console.log("MessageId:", response.MessageId);
+      }
+    } catch (error) {
+      console.error("Error sending SQS message:", error);
+    }
+  }
+
+
 
   async getAllOrders() {
     return await this.orderRepository.findAll();
