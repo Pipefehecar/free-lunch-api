@@ -39,16 +39,34 @@ export class RecipeRepository {
 
   async findRandomRecipeId(): Promise<any> {
     const count = await this.recipeModel.count();
+
+    if (count === 0) {
+      throw new Error("No recipes found in the database");
+    }
+
     const randomIndex = Math.floor(Math.random() * count);
+
     const recipe = await this.recipeModel.findOne({
       offset: randomIndex,
     });
-    const requiredIngredients = await this.recipeIngredientModel.findAll({
-      where: {recipeId: recipe?.id },
-      attributes: ["IngredientId", "quantity"],
-      nest: true,
+
+    if (!recipe) {
+      throw new Error("No recipe found at the random index");
+    }
+
+    const ingredients = await this.recipeIngredientModel.findAll({
+      where: { recipeId: recipe.id },
+      attributes: ["ingredientId", "quantity"],
+      raw: true, 
     });
-    return [recipe?.id, requiredIngredients];
+
+    const requiredIngredients = ingredients.map((item) => ({
+      ingredient: item.ingredientId,
+      quantity: item.quantity,
+    }));
+
+
+    return { recipeId: recipe.id, ingredients: requiredIngredients };
   }
 
   async create(
