@@ -24,6 +24,8 @@ export class AwsSqsService {
 
   async sendMessage(messageBody: any): Promise<SendMessageCommandOutput> {
     try {
+      console.log('Sending message to SQS:', messageBody);
+      console.log('Queue URL:', this.requestQueueUrl);
       const command = new SendMessageCommand({
         QueueUrl: this.requestQueueUrl,
         MessageBody: JSON.stringify(messageBody),
