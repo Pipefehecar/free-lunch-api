@@ -12,10 +12,10 @@ export const configuration = () => ({
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
     },
     sqs: {
+      responseQueueUrl: process.env.SQS_RESPONSE_QUEUE_URL,
       requestQueueUrl: process.env.SQS_REQUEST_QUEUE_URL,
       endpoint: process.env.AWS_ENDPOINT,
     },
-    
   },
   postgres: {
     host: process.env.DB_HOST,
