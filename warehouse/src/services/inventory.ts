@@ -36,14 +36,12 @@ export class InventoryService {
   }
 
   async getPurchases() {
-    // Aquí podrías usar awsDynamoService.getPurchaseHistory()
     return await this.awsDynamoService.getPurchaseHistory();
   }
 
   async processIngredientsRequest(message: any) {
     console.log("Processing ingredients request:", message);
     const { orderId, ingredients } = message;
-    // consulto a la tabla de inventario si el listado de ids de ingredientes estan disponibles
     for (const { id, quantity } of ingredients) {
       const { name, stock } = await this.awsDynamoService.getIngredientById(id);
       let READY = false;
