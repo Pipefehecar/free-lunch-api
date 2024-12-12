@@ -1,11 +1,12 @@
-interface PurchaseItem {
+export interface PurchaseItem {
   id: { S: string };
   name: { S: string };
-  quantity: { N: string };
+  quantitySold: { N: Number };
+  date: { S: string };
 }
 
-interface InventoryItem {
+export interface InventoryItem {
   id: { S: string };
   name: { S: string };
-  stock: { N: string };
+  stock: { N: Number };
 }

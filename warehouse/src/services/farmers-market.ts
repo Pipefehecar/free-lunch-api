@@ -6,12 +6,16 @@ export class FarmersMarketService {
 
   async buyIngredient(ingredientName: string): Promise<number> {
     try {
-      const response = await fetch(`${this.baseUrl}/buy/${ingredientName}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      console.log(`Buying ingredient ${ingredientName}...`);
+      const response = await fetch(
+        `${this.baseUrl}/buy/?ingredient=${ingredientName}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to buy ingredient: ${response.statusText}`);

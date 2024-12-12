@@ -57,8 +57,8 @@ export class AwsDynamoService {
       TableName: this.inventoryTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item: InventoryItem) => ({
-      id: item.id.N,
+    return Items?.map((item: any) => ({
+      id: item.id.S,
       name: item.name.S,
       stock: item.stock.N,
     }));
@@ -78,11 +78,11 @@ export class AwsDynamoService {
       TableName: this.purchasesTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item: PurchaseItem) => ({
-      id: item.id.S,
-      name: item.name.S,
-      quantitySold: item.quantitySold.N,
-      date: item.date.S,
+    return Items?.map((item: any) => ({
+      id: item.id.S as string,
+      name: item.name.S as string,
+      quantitySold: item.quantitySold.N as number,
+      date: item.date.S as string,
     }));
   }
 
