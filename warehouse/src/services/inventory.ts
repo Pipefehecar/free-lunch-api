@@ -36,7 +36,12 @@ export class InventoryService {
   }
 
   async getPurchases() {
-    return await this.awsDynamoService.getPurchaseHistory();
+    try {
+      return await this.awsDynamoService.getPurchaseHistory();
+    } catch (error) {
+      console.error("Error getting purchase history:", error);
+      throw error;
+    }
   }
 
   async processIngredientsRequest(message: any) {
