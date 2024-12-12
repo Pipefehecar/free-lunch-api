@@ -1,7 +1,5 @@
-@BASE_URL=http://localhost:3009/api/v1
-# @BASE_URL=https://kh1fur7kdd.execute-api.us-east-1.amazonaws.com/dev/api/v1/kitchen
+@BASE_URL=http://localhost:3009/kitchen/api/v1
 
-### test
 ### Create Orders
 POST {{BASE_URL}}/orders HTTP/1.1
 Content-Type: application/json

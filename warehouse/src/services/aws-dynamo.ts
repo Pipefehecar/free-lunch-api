@@ -7,6 +7,8 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { PurchaseItem,InventoryItem } from "../interfaces/purchase-item";
+
 
 @Injectable()
 export class AwsDynamoService {
@@ -55,7 +57,7 @@ export class AwsDynamoService {
       TableName: this.inventoryTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item) => ({
+    return Items?.map((item: InventoryItem) => ({
       id: item.id.N,
       name: item.name.S,
       stock: item.stock.N,
@@ -70,13 +72,13 @@ export class AwsDynamoService {
     });
     return await this.docClient.send(command);
   }
-
+  
   async getPurchaseHistory() {
     const command = new ScanCommand({
       TableName: this.purchasesTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item) => ({
+    return Items?.map((item: PurchaseItem) => ({
       id: item.id.N,
       name: item.name.S,
       quantity: item.quantity.N,

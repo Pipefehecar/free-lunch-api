@@ -5,10 +5,18 @@ import { AppModule } from "./app";
 const PORT = process.env.PORT || 3009;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: false });
+  const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.setGlobalPrefix("api/v1");
+  app.setGlobalPrefix("kitchen/api/v1");
   await app.listen(PORT);
-  console.log("Api started on port http://localhost:" + PORT + "/api/v1");
+  app.enableCors(
+    {
+      origin: "*",
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+    },
+  );
+  console.log("Api started on port http://localhost:" + PORT + "/kitchen/api/v1");
 }
 bootstrap();
