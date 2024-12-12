@@ -8,14 +8,10 @@ export class AwsSqsService {
   private requestQueueUrl: string;
 
   constructor(private configService: ConfigService) {
-    const { sqs, region, credentials } = this.configService.get('aws');
+    const { sqs, region } = this.configService.get('aws');
     this.sqsClient = new SQSClient({
       endpoint: sqs.endpoint,
       region: region,
-      credentials: {
-        accessKeyId: credentials.accessKeyId,
-        secretAccessKey: credentials.secretAccessKey,
-      },
     });
     const queueUrl = sqs.requestQueueUrl;
     if (!queueUrl) {
