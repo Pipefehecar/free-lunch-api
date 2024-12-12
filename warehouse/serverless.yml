@@ -49,9 +49,11 @@ functions:
       - http:
           path: /warehouse/api/v1/purchases
           method: get
+          cors: true
       - http:
           path: /warehouse/api/v1/inventory
           method: get
+          cors: true
 
   sqsListener:
     handler: src/lambda.sqsHandler
