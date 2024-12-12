@@ -1,30 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { AwsDynamoService } from "./aws-dynamo";
 import { AwsSqsService } from "./aws-sqs";
 import { FarmersMarketService } from "./farmers-market";
 
 @Injectable()
 export class InventoryService {
-  private responseQueueUrl: string;
-  private requestQueueUrl: string;
 
   constructor(
     private readonly awsSqsService: AwsSqsService,
     private readonly awsDynamoService: AwsDynamoService,
     private readonly farmersMarketService: FarmersMarketService,
-    private configService: ConfigService
-  ) {
-    const responseQueue = this.configService.get<string>("aws.sqs.responseQueueUrl");
-    const requestQueue = this.configService.get<string>("aws.sqs.requestQueueUrl");
-    if (!responseQueue || !requestQueue) {
-      throw new Error(
-        "QUEUE_URL is not defined in environment variables"
-      );
-    }
-    this.responseQueueUrl = responseQueue;
-    this.requestQueueUrl = requestQueue;
-  }
+  ) {}
 
   async getInventory() {
     try {
@@ -66,18 +52,18 @@ export class InventoryService {
           NOT_READY = false;
         }
         if (NOT_READY) {
-          // enviamos un mensaje una nueva orden a warehous
-          await this.awsSqsService.sendMessage(this.requestQueueUrl, message);
+          // enviamos un mensaje una nueva orden a warehouse
+          await this.awsSqsService.sendMessage(message, "request");
         }
       } else {
         // order is ready for kitchen
         READY = true;
       }
       if (READY) {
-        await this.awsSqsService.sendMessage(this.responseQueueUrl, {
+        await this.awsSqsService.sendMessage({
           orderId,
           status: "INGREDIENTS_READY",
-        });
+        }, "response");
       }
     }
   }

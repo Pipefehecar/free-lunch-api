@@ -3,30 +3,14 @@ import { OrderStatusEnum } from "../models/enums/order";
 import { OrderRepository } from "../repositories/order";
 import { RecipeRepository } from "../repositories/recipe";
 import { AwsSqsService } from "./aws-sqs";
-import { ConfigService } from "@nestjs/config";
 @Injectable()
 export class OrdersService {
-  private responseQueueUrl: string;
-  private requestQueueUrl: string;
 
   constructor(
     private orderRepository: OrderRepository,
     private recipeRepository: RecipeRepository,
     private readonly awsSqsService: AwsSqsService,
-    private configService: ConfigService
-  ) {
-    const responseQueue = this.configService.get<string>(
-      "aws.sqs.responseQueueUrl"
-    );
-    const requestQueue = this.configService.get<string>(
-      "aws.sqs.requestQueueUrl"
-    );
-    if (!responseQueue || !requestQueue) {
-      throw new Error("QUEUE_URL is not defined in environment variables");
-    }
-    this.responseQueueUrl = responseQueue;
-    this.requestQueueUrl = requestQueue;
-  }
+  ) {}
 
   async createOrders(count: number, requestId: number) {
     const orders = [];
@@ -38,11 +22,6 @@ export class OrdersService {
         requestId
       );
       orders.push(orderId);
-      // await this.awsSqsService.sendMessage({
-      //   orderId: orderId,
-      //   ingredients: ingredients,
-      //   action: "REQUEST_INGREDIENTS",
-      // });
       console.log("createOrders - Ingredients:", ingredients);
       console.log("createOrders - Order created with id:", orderId);
       
@@ -61,10 +40,7 @@ export class OrdersService {
         action: "REQUEST_INGREDIENTS",
       });
 
-      // Imprimir la respuesta
       console.log("SQS Message Sent Successfully:", response);
-
-      // Si quieres validar un atributo específico de la respuesta
       if (response?.MessageId) {
         console.log("MessageId:", response.MessageId);
       }
