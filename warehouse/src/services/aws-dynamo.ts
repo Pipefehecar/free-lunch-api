@@ -101,7 +101,7 @@ export class AwsDynamoService {
   async makePurchase(id: number, name: string, quantity: number) {
     const command = new PutCommand({
       TableName: this.purchasesTable,
-      Item: { id, name, quantity },
+      Item: { id, name, quantitySold: quantity, date: new Date().toISOString() },
     });
     return await this.docClient.send(command);
   }

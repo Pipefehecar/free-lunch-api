@@ -66,14 +66,14 @@ export class OrdersService {
 
   // recibimos un mensaje de la bodega y lo procesamos
   async processIngredientsRequest(message: any) {
-    console.log("Processing ingredients request:", message);
+    console.log("sqs message response recived from warehouse:", message);
     const { orderId, ingredientsReady } = message;
     await this.orderRepository.updateStatus(
       orderId,
       OrderStatusEnum.IN_PROGRESS
     );
-    console.log("Processing ingredients request:", ingredientsReady);
-    console.log("Created order:", orderId);
+    console.log("Processing ingredients response:", ingredientsReady);
+    console.log("recived order:", orderId);
     await this.orderRepository.updateStatus(orderId, OrderStatusEnum.READY);
   }
 }
