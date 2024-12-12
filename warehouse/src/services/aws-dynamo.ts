@@ -82,6 +82,7 @@ export class AwsDynamoService {
       id: item.id.S,
       name: item.name.S,
       quantitySold: item.quantitySold.N,
+      date: item.date.S,
     }));
   }
 
