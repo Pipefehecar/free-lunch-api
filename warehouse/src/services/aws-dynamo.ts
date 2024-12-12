@@ -17,10 +17,22 @@ export class AwsDynamoService {
   private purchasesTable: string;
 
   constructor(private readonly configService: ConfigService) {
-    const { region, dynamo } = this.configService.get("aws");
-    const client = new DynamoDBClient({
-      region: region || "us-east-1",
-    });
+    const { region, dynamo, credentials  } = this.configService.get("aws");
+    const stage = this.configService.get("stage");
+    let client: DynamoDBClient;
+    if (stage === "local") {
+      client = new DynamoDBClient({
+          region: region || "us-east-1",
+          credentials: {
+            accessKeyId: credentials.accessKeyId,
+            secretAccessKey: credentials.secretAccessKey,
+          },
+      });
+    }else{
+      client = new DynamoDBClient({
+        region: region || "us-east-1",
+      });
+    }
     this.inventoryTable = dynamo.inventoryTable;
     this.purchasesTable = dynamo.purchasesTable;
     this.docClient = DynamoDBDocumentClient.from(client);
