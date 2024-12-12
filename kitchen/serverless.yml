@@ -39,15 +39,20 @@ functions:
       - http:
           path: /kitchen/api/v1/requests
           method: get
+          cors: true
       - http:
           path: /kitchen/api/v1/orders
           method: get
+          cors: true
       - http:
           path: /kitchen/api/v1/orders
           method: post
+          cors: true
       - http:
           path: /kitchen/api/v1/recipes
           method: get
+          cors: true
+
 
   sqsListener:
     handler: src/lambda.sqsHandler
