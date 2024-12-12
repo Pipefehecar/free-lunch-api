@@ -13,8 +13,9 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASSWORD: ${env:DB_PASSWORD}
     DB_DATABASE: ${env:DB_DATABASE}
-    SQS_REQUEST_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
-    SQS_RESPONSE_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
+    SQS_RESPONSE_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
+    SQS_REQUEST_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
+    REGION : ${self:provider.region}
   iam:
     role:
       statements:
