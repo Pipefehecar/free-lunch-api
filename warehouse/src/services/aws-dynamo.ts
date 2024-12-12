@@ -79,10 +79,10 @@ export class AwsDynamoService {
     });
     const { Items } = await this.docClient.send(command);
     return Items?.map((item: any) => ({
-      id: item.id.S as string,
-      name: item.name.S as string,
-      quantitySold: item.quantitySold.N as number,
-      date: item.date.S as string,
+      id: item.id.S,
+      name: item.name.S,
+      quantitySold: item.quantitySold.N ,
+      date: item.date.S,
     }));
   }
 
