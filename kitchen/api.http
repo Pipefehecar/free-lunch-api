@@ -1,5 +1,4 @@
-@BASE_URL=http://localhost:3001/api/v1
-# @BASE_URL=https://av4m9vfr1c.execute-api.us-east-1.amazonaws.com/api/v1/kitchen
+@BASE_URL=http://localhost:3009/kitchen/api/v1
 
 ### Create Orders
 POST {{BASE_URL}}/orders HTTP/1.1

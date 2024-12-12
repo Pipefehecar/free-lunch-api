@@ -7,6 +7,8 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { PurchaseItem, InventoryItem } from "../interfaces/dynamo";
+
 
 @Injectable()
 export class AwsDynamoService {
@@ -15,13 +17,9 @@ export class AwsDynamoService {
   private purchasesTable: string;
 
   constructor(private readonly configService: ConfigService) {
-    const { region, credentials, dynamo } = this.configService.get("aws");
+    const { region, dynamo } = this.configService.get("aws");
     const client = new DynamoDBClient({
-      region: region,
-      credentials: {
-        accessKeyId: credentials.accessKeyId,
-        secretAccessKey: credentials.secretAccessKey,
-      },
+      region: region || "us-east-1",
     });
     this.inventoryTable = dynamo.inventoryTable;
     this.purchasesTable = dynamo.purchasesTable;
@@ -59,8 +57,8 @@ export class AwsDynamoService {
       TableName: this.inventoryTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item) => ({
-      id: item.id.N,
+    return Items?.map((item: any) => ({
+      id: item.id.S,
       name: item.name.S,
       stock: item.stock.N,
     }));
@@ -74,16 +72,17 @@ export class AwsDynamoService {
     });
     return await this.docClient.send(command);
   }
-
+  
   async getPurchaseHistory() {
     const command = new ScanCommand({
       TableName: this.purchasesTable,
     });
     const { Items } = await this.docClient.send(command);
-    return Items?.map((item) => ({
-      id: item.id.N,
+    return Items?.map((item: any) => ({
+      id: item.id.S,
       name: item.name.S,
-      quantity: item.quantity.N,
+      quantitySold: item.quantitySold.N ,
+      date: item.date.S,
     }));
   }
 

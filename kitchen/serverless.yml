@@ -1,0 +1,69 @@
+service: kitchen-service-v3
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: dev
+
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_DATABASE: ${env:DB_DATABASE}
+    SQS_REQUEST_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
+    SQS_RESPONSE_QUEUE_ARN: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+          Resource:
+            - "*"
+  apiGateway:
+    restApiId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiRootResourceId}
+
+functions:
+  KitchenApi:
+    handler: src/lambda.handler
+    description: "Kitchen API"
+    timeout: 30
+    events:
+      - http:
+          path: /kitchen/api/v1/requests
+          method: get
+          cors: true
+      - http:
+          path: /kitchen/api/v1/orders
+          method: get
+          cors: true
+      - http:
+          path: /kitchen/api/v1/orders
+          method: post
+          cors: true
+      - http:
+          path: /kitchen/api/v1/recipes
+          method: get
+          cors: true
+
+
+  sqsListener:
+    handler: src/lambda.sqsHandler
+    description: "Listen to the request queue"
+    timeout: 60
+    events:
+      - sqs:
+          arn: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
+          batchSize: 1
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+  - serverless-offline

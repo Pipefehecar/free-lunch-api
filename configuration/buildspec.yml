@@ -23,17 +23,38 @@ phases:
       - npm install
       - ls
       - npm install -g serverless@3.38.0
-      - serverless plugin install -n serverless-plugin-optimize
-      - serverless plugin install -n serverless-iam-roles-per-function
-      - serverless plugin install -n serverless-plugin-split-stacks
+      - aws s3 cp s3://envs-test-deploy/.env ./kitchen/.env
+      - aws s3 cp s3://envs-test-deploy/.env .env
+      - aws s3 cp s3://envs-test-deploy/.env ./warehouse/.env
   build:
     commands:
       - echo "Start Deploy REST API Free launc"
       - echo Build started on `date`
       ##################################### Generate serverless package. ###################################
       # - npx serverless deploy
+
+      - serverless plugin install -n serverless-dotenv-plugin
+      - serverless plugin install -n serverless-plugin-typescript
+      - npm install
+      # - echo "Start Deploy REST API Free launc raiz "
+      # - sls package --package serverless-package --config serverless.yml
+      # - sls deploy --package serverless-package --config serverless.yml
+      # - echo Build completed on `date`
+      # - echo "deploy kitchen"
+
+      - cd kitchen
+      - npm install
       - sls package --package serverless-package --config serverless.yml
       - sls deploy --package serverless-package --config serverless.yml
+      - echo "deploy kitchen completed"
+      - cd ..
+
+      - echo "Deploy warehouse"
+      - cd warehouse
+      - npm install
+      - sls package --package serverless-package --config serverless.yml
+      - sls deploy --package serverless-package --config serverless.yml
+      - echo "deploy kitchen completed"
 
 artifacts:
   files:

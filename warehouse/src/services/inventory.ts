@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AwsDynamoService } from "./aws-dynamo";
 import { AwsSqsService } from "./aws-sqs";
 import { FarmersMarketService } from "./farmers-market";
@@ -6,19 +7,23 @@ import { FarmersMarketService } from "./farmers-market";
 @Injectable()
 export class InventoryService {
   private responseQueueUrl: string;
+  private requestQueueUrl: string;
 
   constructor(
     private readonly awsSqsService: AwsSqsService,
     private readonly awsDynamoService: AwsDynamoService,
-    private readonly farmersMarketService: FarmersMarketService
+    private readonly farmersMarketService: FarmersMarketService,
+    private configService: ConfigService
   ) {
-    const queueUrl = process.env.SQS_RESPONSE_QUEUE_URL;
-    if (!queueUrl) {
+    const responseQueue = this.configService.get<string>("aws.sqs.responseQueueUrl");
+    const requestQueue = this.configService.get<string>("aws.sqs.requestQueueUrl");
+    if (!responseQueue || !requestQueue) {
       throw new Error(
-        "SQS_RESPONSE_QUEUE_URL is not defined in environment variables"
+        "QUEUE_URL is not defined in environment variables"
       );
     }
-    this.responseQueueUrl = queueUrl;
+    this.responseQueueUrl = responseQueue;
+    this.requestQueueUrl = requestQueue;
   }
 
   async getInventory() {
@@ -31,14 +36,17 @@ export class InventoryService {
   }
 
   async getPurchases() {
-    // Aquí podrías usar awsDynamoService.getPurchaseHistory()
-    return await this.awsDynamoService.getPurchaseHistory();
+    try {
+      return await this.awsDynamoService.getPurchaseHistory();
+    } catch (error) {
+      console.error("Error getting purchase history:", error);
+      throw error;
+    }
   }
 
   async processIngredientsRequest(message: any) {
     console.log("Processing ingredients request:", message);
     const { orderId, ingredients } = message;
-    // consulto a la tabla de inventario si el listado de ids de ingredientes estan disponibles
     for (const { id, quantity } of ingredients) {
       const { name, stock } = await this.awsDynamoService.getIngredientById(id);
       let READY = false;
@@ -59,7 +67,7 @@ export class InventoryService {
         }
         if (NOT_READY) {
           // enviamos un mensaje una nueva orden a warehous
-          await this.awsSqsService.sendMessage(this.responseQueueUrl, message);
+          await this.awsSqsService.sendMessage(this.requestQueueUrl, message);
         }
       } else {
         // order is ready for kitchen

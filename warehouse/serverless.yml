@@ -1,18 +1,18 @@
-service: warehouse-service
+service: warehouse-service-v4
 
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: us-east-1
-  profile: free-launch
   stage: dev
   environment:
     DYNAMODB_TABLE_INVENTORY: !Ref InventoryTable
     DYNAMODB_TABLE_PURCHASES: !Ref PurchasesTable
-    # SQS_RESPONSE_QUEUE: !Ref IngredientsResponseQueue
-    # SQS_REQUEST_QUEUE: !Ref IngredientsRequestQueue
+    SQS_RESPONSE_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueUrl}
+    SQS_REQUEST_QUEUE_URL: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueUrl}
+    REGION : ${self:provider.region}
   iam:
     role:
       statements:
@@ -23,8 +23,7 @@ provider:
             - sqs:DeleteMessage
             - sqs:GetQueueAttributes
           Resource:
-            - ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
-            - ${cf:free-launch-api-monorepo-dev.ResponseQueueArn}
+            - "*"
 
         - Effect: Allow
           Action:
@@ -35,26 +34,34 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - !GetAtt InventoryTable.Arn
-            - !GetAtt PurchasesTable.Arn
+            - "*"
 
   apiGateway:
-    restApiId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRestApiId}
-    restApiRootResourceId: ${cf:free-launch-api-monorepo-dev.ApiGatewayRootResourceId}
+    restApiId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiId}
+    restApiRootResourceId: ${cf:free-launch-api-monorepo-v3-dev.ApiGatewayRestApiRootResourceId}
 
 functions:
-  api:
+  warehouseApi:
     handler: src/lambda.handler
+    description: "Warehouse API"
+    timeout: 30
     events:
-      - httpApi:
-          path: /api/v1
+      - http:
+          path: /warehouse/api/v1/purchases
           method: get
+          cors: true
+      - http:
+          path: /warehouse/api/v1/inventory
+          method: get
+          cors: true
 
   sqsListener:
     handler: src/lambda.sqsHandler
+    description: "Listen to the request queue"
+    timeout: 60
     events:
       - sqs:
-          arn: ${cf:free-launch-api-monorepo-dev.RequestQueueArn}
+          arn: ${cf:free-launch-api-monorepo-v3-dev.RequestQueueArn}
           batchSize: 1
 
 resources:
@@ -63,7 +70,7 @@ resources:
     InventoryTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: warehouse-inventory-table
+        TableName: warehouse-inventory-table-v4
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -75,7 +82,7 @@ resources:
     PurchasesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: warehouse-purchases-table
+        TableName: warehouse-purchases-table-v4
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -84,9 +91,6 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-
-  Outputs:
-    InventoryTableName:
-      Value: !Ref InventoryTable
-    PurchasesTableName:
-      Value: !Ref PurchasesTable
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-monorepo

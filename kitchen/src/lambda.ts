@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import serverlessExpress from "@vendia/serverless-express";
+import { configure } from "@vendia/serverless-express"; // Ajustado para la nueva API
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
@@ -15,11 +15,17 @@ import { OrdersService } from "./services/order";
 let lambdaProxy: Handler;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  app.setGlobalPrefix("kitchen/api/v1");
   await app.init();
-
+  app.enableCors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
   const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  return configure({ app: expressApp }); 
 }
 
 export const handler = async (
