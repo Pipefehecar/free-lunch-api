@@ -62,7 +62,7 @@ functions:
     events:
       - sqs:
           arn: ${cf:free-launch-api-monorepo-v3-dev.ResponseQueueArn}
-          batchSize: 1
+          batchSize: 5
 
 plugins:
   - serverless-plugin-typescript

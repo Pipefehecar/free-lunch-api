@@ -61,7 +61,7 @@ export class RecipeRepository {
     });
 
     const requiredIngredients = ingredients.map((item) => ({
-      ingredient: item.ingredientId,
+      id: item.ingredientId,
       quantity: item.quantity,
     }));
 
