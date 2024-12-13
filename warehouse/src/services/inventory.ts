@@ -33,8 +33,11 @@ export class InventoryService {
   async processIngredientsRequest(message: any) {
     console.log("Processing ingredients request:", message);
     const { orderId, ingredients } = message;
-    for (const { id, quantity } of ingredients) {
-      const { name, stock } = await this.awsDynamoService.getIngredientById(id);
+    console.log(ingredients);
+    for (const ingredient of ingredients) {
+      const { id, quantity } = ingredient;
+      console.log(id, quantity);
+      const { name, stock } = await this.awsDynamoService.getIngredientById(id.toString());
       let READY = false;
       if (stock < quantity) {
         let NOT_READY = true;
@@ -42,8 +45,8 @@ export class InventoryService {
           name
         );
         if (quantitySold > 0) {
-          await this.awsDynamoService.makePurchase(id, name, quantitySold);
-          await this.awsDynamoService.updateInventory(id, quantitySold);
+          await this.awsDynamoService.makePurchase(id.toString(), name, quantitySold);
+          await this.awsDynamoService.updateInventory(id.toString(), quantitySold);
           NOT_READY = false;
         }
         if (quantitySold + stock >= quantity) {

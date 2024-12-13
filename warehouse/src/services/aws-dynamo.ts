@@ -51,7 +51,7 @@ export class AwsDynamoService {
     };
   }
 
-  async getIngredientById(id: number) {
+  async getIngredientById(id: string) {
     const command = new GetCommand({
       TableName: this.inventoryTable,
       Key: { id },
@@ -75,7 +75,7 @@ export class AwsDynamoService {
       stock: item.stock.N,
     }));
   }
-  async updateInventory(id: number, quantity: number) {
+  async updateInventory(id: string, quantity: number) {
     const command = new UpdateCommand({
       TableName: this.inventoryTable,
       Key: { id },
@@ -98,7 +98,7 @@ export class AwsDynamoService {
     }));
   }
 
-  async makePurchase(id: number, name: string, quantity: number) {
+  async makePurchase(id: string, name: string, quantity: number) {
     const command = new PutCommand({
       TableName: this.purchasesTable,
       Item: { id, name, quantitySold: quantity, date: new Date().toISOString() },

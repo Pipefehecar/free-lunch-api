@@ -9,26 +9,17 @@ GET {{BASE_URL}}/purchases HTTP/1.1
 Content-Type: application/json
 
 ### Get test sqs
-POST {{BASE_URL}}/process-message HTTP/1.1
+POST {{BASE_URL}}/test-sqs HTTP/1.1
 Content-Type: application/json
 
 {
-    "Records": [
-        {
-            "messageId": "1a2b3c4d-5678-90ab-cdef-EXAMPLE11111",
-            "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
-            "body": "{\"orderId\": \"c169fadc-3450-4b19-bed3-e5902d67f9a0\", \"ingredientsReady\": true}",
-            "attributes": {
-                "ApproximateReceiveCount": "1",
-                "SentTimestamp": "1646581218372",
-                "SenderId": "ABCDEFGHIJKLMNO",
-                "ApproximateFirstReceiveTimestamp": "1646581218384"
-            },
-            "messageAttributes": {},
-            "md5OfBody": "098f6bcd4621d373cade4e832627b4f6",
-            "eventSource": "aws:sqs",
-            "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:my-queue",
-            "awsRegion": "us-east-1"
-        }
-    ]
+  "orderId": "154e323b-35e2-45c6-996a-20bf46af8a27",
+  "ingredients": [
+    { "id": 9, "quantity": 500 },
+    { "id": 4, "quantity": 300 },
+    { "id": 1, "quantity": 3 },
+    { "id": 7, "quantity": 1 },
+    { "id": 6, "quantity": 30 }
+  ],
+  "action": "REQUEST_INGREDIENTS"
 }
