@@ -35,9 +35,7 @@ export const handler = async (
 let appInstance: any;
 export const sqsHandler = async (event: SQSEvent) => {
 
-  // Obtenemos InventoryService desde el appInstance (DI de Nest)
   if (!appInstance) {
-    // Si no está inicializado, lo inicializamos (puede ser que no esté inicializado si se invoca directamente SQS)
     const app = await NestFactory.create(AppModule);
     await app.init();
     appInstance = app;
