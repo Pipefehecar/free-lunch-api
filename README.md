@@ -30,11 +30,13 @@ Ambos servicios reciben solicitudes a través de API Gateway y se comunican entr
 ## 📋 Tecnologías Utilizadas
 
 ### Backend y Framework
+
 - ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white) Framework Node.js para construcción de aplicaciones escalables
 - ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white) Entorno de ejecución
 - ![NPM](https://img.shields.io/badge/NPM-CB3837?style=flat&logo=npm&logoColor=white) Gestor de paquetes
 
 ### Infraestructura y Despliegue
+
 - ![Serverless](https://img.shields.io/badge/Serverless-FD5750?style=flat&logo=serverless&logoColor=white) Framework para desarrollo y despliegue serverless
 - ![AWS](https://img.shields.io/badge/AWS_SDK-232F3E?style=flat&logo=amazon-aws&logoColor=white) SDK para interacción con servicios AWS
 - ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) Containerización de aplicaciones
@@ -43,12 +45,14 @@ Ambos servicios reciben solicitudes a través de API Gateway y se comunican entr
 - ![CloudFormation](https://img.shields.io/badge/CloudFormation-FF9900?style=flat&logo=amazon-aws&logoColor=white) Infraestructura como código
 
 ### Servicios AWS
+
 - ![API Gateway](https://img.shields.io/badge/API_Gateway-FF4F8B?style=flat&logo=amazon-aws&logoColor=white) Gestión y exposición de APIs
 - ![Lambda](https://img.shields.io/badge/Lambda-FF9900?style=flat&logo=aws-lambda&logoColor=white) Funciones serverless
 - ![SQS](https://img.shields.io/badge/SQS-FF4F8B?style=flat&logo=amazon-sqs&logoColor=white) Cola de mensajes para comunicación entre servicios
 - ![S3](https://img.shields.io/badge/S3-569A31?style=flat&logo=amazon-s3&logoColor=white) Almacenamiento de objetos
 
 ### Bases de Datos
+
 - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white) Base de datos relacional para Kitchen Service
 - ![DynamoDB](https://img.shields.io/badge/DynamoDB-4053D6?style=flat&logo=amazon-dynamodb&logoColor=white) Base de datos NoSQL para Warehouse Service
 
@@ -75,11 +79,13 @@ Antes de iniciar, asegúrate de tener instalado:
 git clone https://github.com/pipefehecar/free-lunch-api.git
 cd free-lunch-api
 ```
+
 2. Instala las dependencias:
 
 ```bash
 npm install
 ```
+
 ---
 
 ## 🐳 Ejecucion del Proyecto con Docker
@@ -89,6 +95,7 @@ npm install
 ```bash
 docker-compose build
 ```
+
 2. Inicia los servicios:
 
 ```bash
@@ -102,6 +109,7 @@ docker-compose logs -f
 ```
 
 4. Detener los servicios:
+
 ```bash
 docker-compose down
 ```
@@ -116,13 +124,16 @@ docker-compose down
 cd kitchen
 npm run start:dev
 ```
+
 2. En otra terminal, inicia el servicio de Warehouse:
 
 ```bash
 cd warehouse
 npm run start:dev
 ```
+
 3. Los servicios estarán disponibles en:
+
 - 🍳 Kitchen Service: http://localhost:3000
 - 🏪 Warehouse Service: http://localhost:3001
 
@@ -143,7 +154,52 @@ npm run lint:fix
 npm run format
 ```
 
-### 🚀 Despliegue
+## **⚙️Ejecutar pruebas del módulo `kitchen`**
+
+El módulo `kitchen` cuenta con tres tipos de pruebas: **unitarias**, **de integración**, y **end-to-end (E2E)**. A continuación, se explica cómo ejecutarlas:
+
+### **1. 🧪Pruebas Unitarias**
+
+#### **Comando:**
+
+```bash
+npm run test
+```
+
+### **2. 🤝Pruebas de Integración**
+
+Las pruebas de integración verifican cómo interactúan los componentes del módulo `kitchen` entre sí.
+
+```
+npm run test:integration
+
+```
+
+### **3. 🚀Pruebas End-to-End (E2E)**
+
+Las pruebas E2E simulan el flujo completo de la aplicación, incluyendo solicitudes HTTP y respuestas.
+
+#### **Comando:**
+
+```
+npm run test:e2e
+
+```
+
+### **4.📊 Cobertura de Pruebas**
+
+Puedes generar un informe de cobertura para identificar qué partes del código están siendo probadas.
+
+```
+npm run test:cov
+
+```
+
+### **🚀 Despliegue**
+
+---
+
+
 
 ```bash
 # Desplegar todos los servicios
@@ -160,9 +216,11 @@ cd warehouse && npx serverless deploy
 ## 🏗️ Arquitectura
 
 ### 📊 Diagrama de Infraestructura
+
 ![Diagrama de Arquitectura](docs/images/architecture-diagram.png)
 
 El diagrama muestra la arquitectura del sistema, incluyendo:
+
 - 🌐 API Gateway como punto de entrada
 - ⚡ Funciones Lambda para cada microservicio
 - 💾 Bases de datos PostgreSQL y DynamoDB
