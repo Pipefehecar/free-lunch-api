@@ -40,8 +40,8 @@ import { RecipeIngredient } from "../models/recipe-ingredient";
       Ingredient,
       KitchenRequest,
       Order,
-    ]), // Agregar esto aquí también
+    ]), 
   ],
-  exports: [SequelizeModule], // Importante: exportar SequelizeModule
+  exports: [SequelizeModule], 
 })
 export class DatabaseModule {}

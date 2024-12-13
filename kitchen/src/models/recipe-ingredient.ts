@@ -39,13 +39,11 @@ export class RecipeIngredient extends Model {
     },
   })
   ingredientId: number;
-  //cantidad
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
   quantity: number;
-  //unidad de medida
   @Column({
     type: DataType.ENUM(...Object.values(IngredientUnitEnum)),
     allowNull: false,

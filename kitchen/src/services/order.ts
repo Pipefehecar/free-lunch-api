@@ -3,6 +3,7 @@ import { OrderStatusEnum } from "../models/enums/order";
 import { OrderRepository } from "../repositories/order";
 import { RecipeRepository } from "../repositories/recipe";
 import { AwsSqsService } from "./aws-sqs";
+
 @Injectable()
 export class OrdersService {
 
@@ -59,12 +60,10 @@ export class OrdersService {
     return await this.orderRepository.findById(id);
   }
 
-  // historical(ready), pending, inProgress orders
   async getOrdersByStatus(status: OrderStatusEnum) {
     return await this.orderRepository.findByStatus(status);
   }
 
-  // recibimos un mensaje de la bodega y lo procesamos
   async processIngredientsRequest(message: any) {
     console.log("sqs message response recived from warehouse:", message);
     const { orderId, ingredientsReady } = message;
@@ -72,6 +71,9 @@ export class OrdersService {
       orderId,
       OrderStatusEnum.IN_PROGRESS
     );
+    setTimeout(() => {
+      console.log("Se esta preparando la orden con id:", orderId);
+    }, 30000); 
     console.log("Processing ingredients response:", ingredientsReady);
     console.log("recived order:", orderId);
     await this.orderRepository.updateStatus(orderId, OrderStatusEnum.READY);
